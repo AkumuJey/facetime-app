@@ -1,14 +1,16 @@
 "use client";
-
+import React from "react";
 import {
   Description,
   Dialog,
   DialogPanel,
   DialogTitle,
+  Transition,
   TransitionChild,
 } from "@headlessui/react";
 import { Dispatch, Fragment, SetStateAction, useState } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
+import { FaCopy } from "react-icons/fa";
 interface Props {
   enable: boolean;
   setEnable: (enable: boolean) => void;
@@ -19,7 +21,7 @@ const CreateLink = ({ enable, setEnable }: Props) => {
   const [facetimeLink, setFacetimeLink] = useState<string>("");
   const closeModal = () => setEnable(false);
   return (
-    <TransitionChild appear={enable} as={Fragment}>
+    <Transition appear show={enable} as={Fragment}>
       <Dialog className="relative z-10" onClose={closeModal}>
         <TransitionChild
           as={Fragment}
@@ -57,7 +59,7 @@ const CreateLink = ({ enable, setEnable }: Props) => {
           </div>
         </div>
       </Dialog>
-    </TransitionChild>
+    </Transition>
   );
 };
 
