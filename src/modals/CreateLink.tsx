@@ -13,7 +13,7 @@ import CopyToClipboard from "react-copy-to-clipboard";
 import { FaCopy } from "react-icons/fa";
 interface Props {
   enable: boolean;
-  setEnable: (enable: boolean) => void;
+  setEnable: Dispatch<SetStateAction<boolean>>;
 }
 
 const CreateLink = ({ enable, setEnable }: Props) => {
@@ -63,7 +63,7 @@ const CreateLink = ({ enable, setEnable }: Props) => {
   );
 };
 
-const MeetingForm = ({
+export const MeetingForm = ({
   setShowMeetingLink,
   setFacetimeLink,
 }: {
@@ -133,7 +133,7 @@ const MeetingForm = ({
   );
 };
 
-const MeetingLink = ({ facetimeLink }: { facetimeLink: string }) => {
+export const MeetingLink = ({ facetimeLink }: { facetimeLink: string }) => {
   const [copied, setCopied] = useState<boolean>(false);
   const handleCopy = () => setCopied(true);
 
