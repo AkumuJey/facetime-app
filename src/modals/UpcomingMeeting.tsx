@@ -1,6 +1,10 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 
-const UpcomingMeeting = () => {
+interface Props {
+  enable: boolean;
+  setEnable: Dispatch<SetStateAction<boolean>>;
+}
+const UpcomingMeeting = ({ enable, setEnable }: Props) => {
   return <div>Upcoming Meeting</div>;
 };
 
