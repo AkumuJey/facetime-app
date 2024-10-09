@@ -11,6 +11,8 @@ import {
 import { Dispatch, Fragment, SetStateAction, useState } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { FaCopy } from "react-icons/fa";
+import { useStreamVideoClient } from "@stream-io/video-react-sdk";
+import { useUser } from "@clerk/nextjs";
 interface Props {
   enable: boolean;
   setEnable: Dispatch<SetStateAction<boolean>>;
@@ -72,9 +74,25 @@ export const MeetingForm = ({
 }) => {
   const [description, setDescription] = useState<string>("");
   const [dateTime, setDateTime] = useState<string>("");
-
+  const client = useStreamVideoClient();
+  const { user } = useUser();
   const handleStartMeeting = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!client || !user) return;
+    const id = crypto.randomUUID();
+    const call = client.call("default", id);
+    if (!call) throw new Error("Failed to create meeting.");
+
+    await call.getOrCreate({
+      data: {
+        starts_at: new Date(dateTime).toISOString(),
+        custom: {
+          description,
+        },
+      },
+    });
+    setFacetimeLink(`${call.id}`);
+    setShowMeetingLink(true);
     console.log({ description, dateTime });
   };
 

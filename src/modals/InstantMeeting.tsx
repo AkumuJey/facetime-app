@@ -1,4 +1,5 @@
 "use client";
+import { useUser } from "@clerk/nextjs";
 import {
   Description,
   Dialog,
@@ -7,6 +8,7 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
+import { useStreamVideoClient } from "@stream-io/video-react-sdk";
 import React, { Dispatch, Fragment, SetStateAction, useState } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { FaCopy } from "react-icons/fa";
@@ -76,9 +78,25 @@ const MeetingForm = ({
   setFacetimeLink: Dispatch<SetStateAction<string>>;
 }) => {
   const [description, setDescription] = useState<string>("");
-
+  const client = useStreamVideoClient();
+  const { user } = useUser();
   const handleStartMeeting = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!client || !user) return;
+    const id = crypto.randomUUID();
+    const call = client.call("default", id);
+    if (!call) throw new Error("Failed to create meeting.");
+
+    await call.getOrCreate({
+      data: {
+        starts_at: new Date(Date()).toISOString(),
+        custom: {
+          description,
+        },
+      },
+    });
+    setFacetimeLink(`${call.id}`);
+    setShowMeetingLink(true);
     console.log({ description });
   };
 
